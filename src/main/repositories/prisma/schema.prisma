@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model adresses {
+  id_adresse              Int                       @id @default(autoincrement())
+  rue                     String                    @db.VarChar(255)
+  numero                  String?                   @db.VarChar(10)
+  code_postal             String                    @db.VarChar(10)
+  ville                   String                    @db.VarChar(100)
+  created_at              DateTime?                 @default(now()) @db.Timestamp(0)
+  updated_at              DateTime?                 @default(now()) @db.Timestamp(0)
+  professionnels_adresses professionnels_adresses[]
+
+  @@index([code_postal], map: "idx_code_postal")
+  @@index([ville], map: "idx_ville")
+}
+
+model favoris {
+  id_favori     Int             @id @default(autoincrement())
+  nom_favori    String          @unique(map: "uk_nom_favori") @db.VarChar(100)
+  tests_favoris tests_favoris[]
+}
+
+model fonctions_cognitives {
+  id_fonction     Int               @id @default(autoincrement())
+  nom_fonction    String            @unique(map: "uk_nom_fonction") @db.VarChar(100)
+  tests_fonctions tests_fonctions[]
+}
+
+model patients {
+  id_patient     Int            @id @default(autoincrement())
+  nom            String         @db.VarChar(100)
+  prenom         String         @db.VarChar(100)
+  date_naissance DateTime?      @db.Date
+  sexe           patients_sexe?
+  tel            String?        @db.VarChar(20)
+  email          String?        @db.VarChar(100)
+  created_at     DateTime?      @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?      @default(now()) @db.Timestamp(0)
+  rapports       rapports[]
+  seances        seances[]
+
+  @@index([nom, prenom], map: "idx_nom_prenom")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model plages_age {
+  id_plage Int     @id @default(autoincrement())
+  age_min  Int
+  age_max  Int
+  tests    tests[]
+}
+
+model prises_en_charge {
+  id_pec         Int     @id @default(autoincrement())
+  id_theme       Int?
+  nom_pec        String  @db.VarChar(150)
+  protocole_path String? @db.Text
+  themes         themes? @relation(fields: [id_theme], references: [id_theme], onUpdate: NoAction, map: "prises_en_charge_ibfk_1")
+
+  @@unique([id_theme, nom_pec], map: "uk_theme_nom_pec")
+  @@index([id_theme], map: "idx_theme")
+}
+
+model professionnels {
+  id_professionnel        Int                       @id @default(autoincrement())
+  nom_pro                 String                    @db.VarChar(100)
+  prenom_pro              String?                   @db.VarChar(100)
+  specialite              String                    @db.VarChar(100)
+  email_pro               String?                   @db.VarChar(100)
+  tel_pro                 String?                   @db.VarChar(20)
+  notes                   String?                   @db.Text
+  created_at              DateTime?                 @default(now()) @db.Timestamp(0)
+  updated_at              DateTime?                 @default(now()) @db.Timestamp(0)
+  professionnels_adresses professionnels_adresses[]
+
+  @@index([nom_pro, prenom_pro], map: "idx_nom_pro")
+  @@index([specialite], map: "idx_specialite")
+}
+
+model professionnels_adresses {
+  id_pro_adresse   Int            @id @default(autoincrement())
+  id_professionnel Int
+  id_adresse       Int
+  professionnels   professionnels @relation(fields: [id_professionnel], references: [id_professionnel], onDelete: Cascade, onUpdate: NoAction, map: "professionnels_adresses_ibfk_1")
+  adresses         adresses       @relation(fields: [id_adresse], references: [id_adresse], onDelete: Cascade, onUpdate: NoAction, map: "professionnels_adresses_ibfk_2")
+
+  @@unique([id_professionnel, id_adresse], map: "uk_pro_adresse")
+  @@index([id_adresse], map: "id_adresse")
+}
+
+model rapports {
+  id_rapport   Int      @id @default(autoincrement())
+  id_patient   Int
+  rapport_path String?  @db.Text
+  patients     patients @relation(fields: [id_patient], references: [id_patient], onDelete: Cascade, onUpdate: NoAction, map: "rapports_ibfk_1")
+
+  @@index([id_patient], map: "id_patient")
+}
+
+model seances {
+  id_seance    Int      @id @default(autoincrement())
+  id_patient   Int
+  type_seance  String   @db.VarChar(100)
+  date_heure   DateTime @db.DateTime(0)
+  duree_seance Int?
+  notes        String?  @db.Text
+  patients     patients @relation(fields: [id_patient], references: [id_patient], onDelete: Cascade, onUpdate: NoAction, map: "seances_ibfk_1")
+
+  @@index([date_heure], map: "idx_date_heure")
+  @@index([id_patient, date_heure], map: "idx_patient_date")
+}
+
+model tests {
+  id_test         Int               @id @default(autoincrement())
+  nom_test        String            @db.VarChar(150)
+  test_path       String?           @db.Text
+  id_plage        Int?
+  plages_age      plages_age?       @relation(fields: [id_plage], references: [id_plage], onUpdate: NoAction, map: "tests_ibfk_1")
+  tests_favoris   tests_favoris[]
+  tests_fonctions tests_fonctions[]
+
+  @@index([id_plage], map: "idx_plage")
+}
+
+model tests_favoris {
+  id_test_favori Int     @id @default(autoincrement())
+  id_favori      Int
+  id_test        Int
+  favoris        favoris @relation(fields: [id_favori], references: [id_favori], onDelete: Cascade, onUpdate: NoAction, map: "tests_favoris_ibfk_1")
+  tests          tests   @relation(fields: [id_test], references: [id_test], onDelete: Cascade, onUpdate: NoAction, map: "tests_favoris_ibfk_2")
+
+  @@unique([id_favori, id_test], map: "uk_favori_test")
+  @@index([id_test], map: "id_test")
+}
+
+model tests_fonctions {
+  id_test_fonction     Int                  @id @default(autoincrement())
+  id_test              Int
+  id_fonction          Int
+  tests                tests                @relation(fields: [id_test], references: [id_test], onDelete: Cascade, onUpdate: NoAction, map: "tests_fonctions_ibfk_1")
+  fonctions_cognitives fonctions_cognitives @relation(fields: [id_fonction], references: [id_fonction], onDelete: Cascade, onUpdate: NoAction, map: "tests_fonctions_ibfk_2")
+
+  @@unique([id_test, id_fonction], map: "uk_test_fonction")
+  @@index([id_fonction], map: "id_fonction")
+}
+
+model themes {
+  id_theme         Int                @id @default(autoincrement())
+  nom_theme        String             @unique(map: "uk_nom_theme") @db.VarChar(100)
+  prises_en_charge prises_en_charge[]
+}
+
+enum patients_sexe {
+  M
+  F
+}

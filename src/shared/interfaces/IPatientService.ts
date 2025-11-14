@@ -1,7 +1,7 @@
-import Patient from "../patient";
+import {Patient, PatientCreateDto} from "../patient";
 
 export default interface IPatientService {
     getPatients:() => Promise<Patient[]>,
-    addPatient:(patient: Patient) => Promise<void>,
+    addPatient:(patientDto: PatientCreateDto) => Promise<Patient>,
     deletePatient:(id: number) => Promise<void> 
 }

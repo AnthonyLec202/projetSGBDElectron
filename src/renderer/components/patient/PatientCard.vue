@@ -16,7 +16,7 @@
 
 
 <script lang="ts" setup>
-import Patient from 'src/shared/patient';
+import { Patient } from 'src/shared/patient';
 import { usePatients } from 'src/renderer/composables/patients';
 
 

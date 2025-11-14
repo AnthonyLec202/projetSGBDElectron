@@ -1,4 +1,4 @@
-import Patient from "src/shared/patient";
+import { Patient, PatientCreateDto } from "src/shared/patient";
 import { ref } from "vue";
 
 const patients = ref<Patient[]>([]);
@@ -8,8 +8,8 @@ export function usePatients() {
         patients.value = await window.electronService.patients.getPatients();
     };
 
-    const addPatient = async (patient: Patient) => {
-        await window.electronService.patients.addPatient(patient);
+    const addPatient = async (patientDto: PatientCreateDto) => {
+        await window.electronService.patients.addPatient(patientDto);
         fetchPatients();
     }
 

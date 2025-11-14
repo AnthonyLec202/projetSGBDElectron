@@ -4,9 +4,6 @@
       <RouterLink to="/" class="nav-button">
         Home
       </RouterLink>
-      <RouterLink to="/seances" class="nav-button">
-        Séances
-      </RouterLink>
     </div>
   </nav>
 </template>

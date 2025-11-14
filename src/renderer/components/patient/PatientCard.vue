@@ -4,7 +4,8 @@
             <span class="nom">{{ props.patient.nom }}</span>
             <span class="prenom">{{ props.patient.prenom}}</span>
         </div>
-        <button class="deleteButton" @click="handleClick">Supprimer</button>
+        <button class="deleteButton" @click="handleDelete">Supprimer</button>
+        <button class="updateButton" @click="handleUpdate">Modifier</button>
     </div>
 </template>
 
@@ -18,7 +19,7 @@
 <script lang="ts" setup>
 import { Patient } from 'src/shared/patient';
 import { usePatients } from 'src/renderer/composables/patients';
-
+import { useRoute, useRouter } from 'vue-router';
 
 interface Props {
     patient: Patient
@@ -27,11 +28,16 @@ interface Props {
 const props = defineProps<Props>();
 
 const {deletePatient} = usePatients();
+const router = useRouter();
 
-const handleClick = async () => {
-    let confirmation = confirm("Voulez-vous supprimer ce patient ?");
+const handleDelete = async () => {
+    let confirmation = confirm(`Voulez-vous supprimer ${props.patient.nom} ${props.patient.prenom} ?`);
     if(confirmation)
         await deletePatient(props.patient.id);
+}
+
+const handleUpdate = () => {
+    router.push("/update-patient/" + props.patient.id);
 }
 
 

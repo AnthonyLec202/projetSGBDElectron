@@ -25,6 +25,27 @@ export class PatientRepository {
     })
   };
 
+  async getPatientById(id: number): Promise<Patient | null> {
+      
+    const patientFromDb = await this.dbclient.patients.findUnique({
+      where: {
+        id_patient: id 
+      }
+    });
+
+    if (!patientFromDb) {
+      return null;
+    }
+
+    const { id_patient, sexe: sexeFromDb, ...rest } = patientFromDb;
+    
+    return {
+      id: id_patient,
+      ...rest,
+      sexe: (sexeFromDb as SexeType) || null
+    } as Patient;
+  }
+
   async addPatient(patientDto: PatientCreateDto): Promise<Patient> {
     
     const dataForDb = {
@@ -47,7 +68,7 @@ export class PatientRepository {
         id: id_patient,
         ...rest,
         sexe: (sexe as SexeType) || null
-    };
+    } as Patient;
    }
 
   async deletePatient(id: number): Promise<void>{
@@ -58,6 +79,33 @@ export class PatientRepository {
     });
   }
 
+  async updatePatient(id: number, patientDto: PatientUpdateDto): Promise<Patient> {
+     
+    const { sexe, ...otherData } = patientDto;
 
+    const dataForDb: { [key: string]: any } = {
+        ...otherData, 
+    };
+
+    if (sexe !== undefined) {
+        dataForDb.sexe = (sexe as patients_sexe) || null;
+    }
+
+    const updatedPatientFromDb = await this.dbclient.patients.update({
+      where: {
+        id_patient: id 
+      },
+      data: dataForDb
+    });
+
+    const { id_patient, sexe: sexeFromDb, ...rest } = updatedPatientFromDb;
+    
+    return {
+      id: id_patient,
+      ...rest,
+      
+      sexe: (sexeFromDb as SexeType) || null 
+    } as Patient;
+  }
 }
 

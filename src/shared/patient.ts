@@ -8,7 +8,7 @@ export interface Patient {
   id: number; // Non-optionnel
   nom: string;
   prenom: string;
-  date_naissance: Date | null;
+  dateNaissance: Date | null;
   sexe: SexeType | null; // Utilise le type simple
   tel: string | null;
   email: string | null;

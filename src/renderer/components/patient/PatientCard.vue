@@ -4,22 +4,16 @@
             <span class="nom">{{ props.patient.nom }}</span>
             <span class="prenom">{{ props.patient.prenom}}</span>
         </div>
-        <button class="deleteButton" @click="handleDelete">Supprimer</button>
+        <button class="delete-button" @click="handleDelete">Supprimer</button>
         <button class="updateButton" @click="handleUpdate">Modifier</button>
     </div>
 </template>
 
 
-
-
-
-
-
-
 <script lang="ts" setup>
 import { Patient } from 'src/shared/patient';
 import { usePatients } from 'src/renderer/composables/patients';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 interface Props {
     patient: Patient
@@ -85,16 +79,4 @@ const handleUpdate = () => {
     cursor: pointer;
 }
 
-.checkbox {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 1.5rem;
-    cursor: pointer;
-    align-self: center;
-}
-
-.done {
-    text-decoration: line-through;
-    color: #94a3b8;
-}
 </style>

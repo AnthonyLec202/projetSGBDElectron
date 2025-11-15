@@ -4,6 +4,10 @@
       <RouterLink to="/" class="nav-button">
         Home
       </RouterLink>
+      <RouterLink to="/professionnels" class="nav-button">
+        Professionnels
+      </RouterLink>
+
     </div>
   </nav>
 </template>

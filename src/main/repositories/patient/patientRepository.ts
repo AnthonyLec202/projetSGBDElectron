@@ -20,7 +20,11 @@ export class PatientRepository {
       return {
         id: p.id_patient,
         nom: p.nom,
-        prenom: p.prenom
+        prenom: p.prenom,
+        dateNaissance: p.date_naissance || null, // 'date_naissance' (DB) devient 'dateNaissance' (App)
+        sexe: (p.sexe as SexeType) || null,
+        tel: p.tel || null,
+        email: p.email || null
       } as Patient;
     })
   };
@@ -37,10 +41,11 @@ export class PatientRepository {
       return null;
     }
 
-    const { id_patient, sexe: sexeFromDb, ...rest } = patientFromDb;
+    const { id_patient, sexe: sexeFromDb, date_naissance, ...rest } = patientFromDb;
     
     return {
       id: id_patient,
+      dateNaissance: date_naissance,
       ...rest,
       sexe: (sexeFromDb as SexeType) || null
     } as Patient;
@@ -51,7 +56,7 @@ export class PatientRepository {
     const dataForDb = {
         nom: patientDto.nom,
         prenom: patientDto.prenom,
-        date_naissance: patientDto.date_naissance || null,
+        date_naissance: patientDto.dateNaissance || null,
         sexe: (patientDto.sexe as patients_sexe) || null,
         tel: patientDto.tel || null,
         email: patientDto.email || null
@@ -62,10 +67,11 @@ export class PatientRepository {
       data: dataForDb
     });
 
-    const { id_patient, sexe, ...rest } = newPatient;
+    const { id_patient, sexe, date_naissance, ...rest } = newPatient;
 
     return {
         id: id_patient,
+        dateNaissance: date_naissance,
         ...rest,
         sexe: (sexe as SexeType) || null
     } as Patient;
@@ -98,10 +104,11 @@ export class PatientRepository {
       data: dataForDb
     });
 
-    const { id_patient, sexe: sexeFromDb, ...rest } = updatedPatientFromDb;
+    const { id_patient, sexe: sexeFromDb, date_naissance, ...rest } = updatedPatientFromDb;
     
     return {
       id: id_patient,
+      dateNaissance: date_naissance,
       ...rest,
       
       sexe: (sexeFromDb as SexeType) || null 

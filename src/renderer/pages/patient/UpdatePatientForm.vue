@@ -1,10 +1,9 @@
 <template>
-  <div class="container" v-if="patientPourUpdate">
+  <div class="container" v-if="patientUpdate">
     
-    <h2>Mettre à jour : {{ patientPourUpdate.nom }} {{ patientPourUpdate.prenom }}</h2>
+    <h2>Mettre à jour : {{ patientUpdate.nom }} {{ patientUpdate.prenom }}</h2>
     
-    <form @submit.prevent="handleUpdate">
-
+    <form> 
       <label for="nom">Nom :</label>
       <input v-model="nom" type="text" id="nom" required>
 
@@ -16,7 +15,6 @@
 
       <label for="sexe">Sexe :</label>
       <select v-model="sexe" id="sexe">
-        <option :value="null">Non spécifié</option>
         <option value="M">M</option>
         <option value="F">F</option>
       </select>
@@ -27,13 +25,10 @@
       <label for="email">Email :</label>
       <input v-model="email" type="text" id="email" placeholder="Email (optionnel)">
       
-      <button type="submit">Mettre à jour le patient</button>
+      <button type="submit" @click="handleUpdate">Mettre à jour le patient</button>
     </form>
   </div>
   
-  <div v-else>
-    <p>Chargement des informations du patient...</p>
-  </div>
 </template>
 
 
@@ -42,19 +37,13 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePatients } from 'src/renderer/composables/patients';
 
-
 import { Patient, PatientUpdateDto, SexeType } from 'src/shared/patient';
-
 
 const route = useRoute(); 
 const router = useRouter();
 const { getPatientById, updatePatient } = usePatients();
 
-
-
-
-const patientPourUpdate = ref<Patient | null>(null);
-
+const patientUpdate = ref<Patient | null>(null);
 
 const nom = ref('');
 const prenom = ref('');
@@ -63,10 +52,8 @@ const sexe = ref<SexeType | null>(null);
 const tel = ref('');
 const email = ref('');
 
-
-
 onMounted(async () => {
-    
+
     const id = Number(route.params.id); 
     if (isNaN(id)) {
         console.error("ID invalide.");
@@ -74,37 +61,32 @@ onMounted(async () => {
         return;
     }
 
-    
     const patientData = await getPatientById(id);
     
     if (patientData) {
-        patientPourUpdate.value = patientData;
-             
+        patientUpdate.value = patientData;
+            
         nom.value = patientData.nom;
         prenom.value = patientData.prenom;
         sexe.value = patientData.sexe;
         tel.value = patientData.tel || '';
         email.value = patientData.email || '';
         
+        if (patientData.date_naissance) 
+          date_naissance.value = new Date(patientData.date_naissance).toISOString().split('T')[0];
         
-        if (patientData.date_naissance) {
-             date_naissance.value = new Date(patientData.date_naissance).toISOString().split('T')[0];
-        }
     } else {
         console.error("Patient non trouvé.");
         router.push('/');
     }
 });
 
-
-
 const handleUpdate = async () => {
-    if (!patientPourUpdate.value || !patientPourUpdate.value.id) return;
-    
+    if (!patientUpdate.value || !patientUpdate.value.id) return;
     
     const dataToUpdate: PatientUpdateDto = {
         nom: nom.value,
-        prenom: prenom.value,       
+        prenom: prenom.value, 
         date_naissance: date_naissance.value ? new Date(date_naissance.value) : null,
         sexe: sexe.value, 
         tel: tel.value || null,
@@ -112,7 +94,7 @@ const handleUpdate = async () => {
     };
 
     try {
-        await updatePatient(patientPourUpdate.value.id, dataToUpdate);
+        await updatePatient(patientUpdate.value.id, dataToUpdate);
         router.push('/'); 
     } catch (error) {
         console.error("Échec de la mise à jour :", error);
@@ -120,3 +102,72 @@ const handleUpdate = async () => {
     }
 };
 </script>
+
+<style scoped>
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 500px;
+    margin: 40px auto; 
+    padding: 24px;
+    border: 1px solid #ccc;
+    border-radius: 10px; 
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-align: left;
+}
+
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 12px; 
+    margin-bottom: 16px; 
+    border: 1px solid #ddd;
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-size: 16px;
+}
+
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3; 
+}
+
+</style>

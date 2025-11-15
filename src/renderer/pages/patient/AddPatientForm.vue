@@ -18,7 +18,7 @@
 
 
 <script lang="ts" setup>
-import { Patient,PatientCreateDto, SexeType } from 'src/shared/patient';
+import {PatientCreateDto, SexeType } from 'src/shared/patient';
 import { ref } from 'vue';
 import { usePatients } from 'src/renderer/composables/patients';
 import { useRouter } from 'vue-router';
@@ -41,7 +41,7 @@ const handleAdd = async () => {
         sexe: (sexe.value as SexeType) || null,
         tel: tel.value || null,
         email: email.value || null
-    } as Patient;
+    } as PatientCreateDto;
 
     await addPatient(patientDto);
 

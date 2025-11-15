@@ -1,5 +1,6 @@
 <template>
   <div class="list-container">
+    <h1>Mes Patients</h1>
     <PatientCard v-for="patient in patients" :patient="patient"/>
   </div>
   <AddPatientButton/>

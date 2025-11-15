@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="navbar-content">
       <RouterLink to="/" class="nav-button">
-        Home
+        Patients
       </RouterLink>
       <RouterLink to="/professionnels" class="nav-button">
         Professionnels

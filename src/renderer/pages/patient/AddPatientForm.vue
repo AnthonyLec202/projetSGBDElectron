@@ -3,7 +3,7 @@
         <h2>Ajouter un patient</h2> 
         <input v-model="nom" type="text" name="nom" placeholder="Nom">
         <input v-model="prenom" type="text" name="prenom" placeholder="Prenom">
-        <input v-model="date_naissance" type="date" name="date_naissance">
+        <input v-model="dateNaissance" type="date" name="date_naissance">
         <select v-model="sexe" name="sexe">
             <option value="">Sélectionner le sexe (optionnel)</option>
             <option value="M">M</option>
@@ -28,7 +28,7 @@ const router = useRouter();
 
 const nom = ref('');
 const prenom = ref('');
-const date_naissance = ref<string>(''); 
+const dateNaissance = ref<string>(''); //const date_naissance = ref<string>(''); 
 const sexe = ref('');
 const tel = ref('');
 const email = ref('');
@@ -37,7 +37,7 @@ const handleAdd = async () => {
     let patientDto = {
         nom: nom.value,
         prenom: prenom.value,
-        date_naissance: date_naissance.value ? new Date(date_naissance.value) : null,
+        dateNaissance: dateNaissance.value ? new Date(dateNaissance.value) : null,
         sexe: (sexe.value as SexeType) || null,
         tel: tel.value || null,
         email: email.value || null

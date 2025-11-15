@@ -11,7 +11,7 @@
       <input v-model="prenom" type="text" id="prenom" required>
 
       <label for="date_naissance">Date de naissance :</label>
-      <input v-model="date_naissance" type="date" id="date_naissance">
+      <input v-model="dateNaissance" type="date" id="dateNaissance">
 
       <label for="sexe">Sexe :</label>
       <select v-model="sexe" id="sexe">
@@ -47,7 +47,7 @@ const patientUpdate = ref<Patient | null>(null);
 
 const nom = ref('');
 const prenom = ref('');
-const date_naissance = ref(''); 
+const dateNaissance = ref(''); 
 const sexe = ref<SexeType | null>(null); 
 const tel = ref('');
 const email = ref('');
@@ -72,8 +72,8 @@ onMounted(async () => {
         tel.value = patientData.tel || '';
         email.value = patientData.email || '';
         
-        if (patientData.date_naissance) 
-          date_naissance.value = new Date(patientData.date_naissance).toISOString().split('T')[0];
+        if (patientData.dateNaissance) 
+          dateNaissance.value = new Date(patientData.dateNaissance).toISOString().split('T')[0];
         
     } else {
         console.error("Patient non trouvé.");
@@ -87,7 +87,7 @@ const handleUpdate = async () => {
     const dataToUpdate: PatientUpdateDto = {
         nom: nom.value,
         prenom: prenom.value, 
-        date_naissance: date_naissance.value ? new Date(date_naissance.value) : null,
+        dateNaissance: dateNaissance.value ? new Date(dateNaissance.value) : null,
         sexe: sexe.value, 
         tel: tel.value || null,
         email: email.value || null

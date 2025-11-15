@@ -87,7 +87,7 @@ export class PatientRepository {
 
   async updatePatient(id: number, patientDto: PatientUpdateDto): Promise<Patient> {
      
-    const { sexe, ...otherData } = patientDto;
+    const { sexe, dateNaissance, ...otherData } = patientDto;
 
     const dataForDb: { [key: string]: any } = {
         ...otherData, 
@@ -95,6 +95,10 @@ export class PatientRepository {
 
     if (sexe !== undefined) {
         dataForDb.sexe = (sexe as patients_sexe) || null;
+    }
+
+    if (dateNaissance !== undefined) {
+        dataForDb.date_naissance = dateNaissance || null;
     }
 
     const updatedPatientFromDb = await this.dbclient.patients.update({

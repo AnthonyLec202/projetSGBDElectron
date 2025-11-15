@@ -27,11 +27,11 @@
 <script setup lang="ts">
 
 
-import { Prof } from 'src/shared/professionnel';
+import { Professionnel } from 'src/shared/professionnel';
 
 
 interface Props {
-  professionnel: Prof
+  professionnel: Professionnel
 }
 const props = defineProps<Props>();
 

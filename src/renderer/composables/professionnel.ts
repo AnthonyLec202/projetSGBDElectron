@@ -1,9 +1,9 @@
 import { ref } from "vue";
 
-import { Prof } from "src/shared/professionnel";
+import { Professionnel } from "src/shared/professionnel";
 
 
-const professionnels = ref<Prof[]>([]);
+const professionnels = ref<Professionnel[]>([]);
 
 export function useProfessionnels() {
 

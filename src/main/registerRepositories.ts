@@ -1,9 +1,9 @@
 import { registerPatientRepository } from "./repositories/patient/registerPatientRepository";
-import { registerProfRepository } from "./repositories/prof/registerProfRepository";
+import { registerProfessionnelRepository } from "./repositories/prof/registerProfessionnelRepository";
 
 export function registerRepositories()
 {
     registerPatientRepository();
-    registerProfRepository();
+    registerProfessionnelRepository();
 
 }

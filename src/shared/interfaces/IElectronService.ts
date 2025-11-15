@@ -1,5 +1,5 @@
 import IPatientService from "./IPatientService"
-import IProfService from "./IProfService";
+import IProfService from "./IProfessionnelService";
 
 
 export default interface IElectronService {

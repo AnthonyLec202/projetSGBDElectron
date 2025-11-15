@@ -1,7 +1,7 @@
-import IProfService from "src/shared/interfaces/IProfService";
+import IProfessionnelService from "src/shared/interfaces/IProfessionnelService"
 import { ipcRenderer } from "electron"
 
-export function profService(): IProfService{
+export function professionnelService(): IProfessionnelService{
     return{
         getProfessionnels: () => ipcRenderer.invoke("profRepository:getProfessionnels")
     }

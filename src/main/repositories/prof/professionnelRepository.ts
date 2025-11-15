@@ -1,9 +1,9 @@
-import { Prof } from "src/shared/professionnel";
 import { Adresse } from "src/shared/adresse";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@prisma/client";
+import { Professionnel } from "src/shared/professionnel";
 
-export class ProfRepository{
+export class ProfessionnelRepository{
     private dbclient: PrismaClient;
       constructor() {
         const databaseUrl = process.env.DATABASE_URL;
@@ -14,7 +14,7 @@ export class ProfRepository{
         this.dbclient = new PrismaClient({ adapter });
       }
     
-      async getProfessionnels(): Promise<Prof[]>{
+      async getProfessionnels(): Promise<Professionnel[]>{
         let professionnels = await this.dbclient.professionnels.findMany({
             include: {
                 professionnels_adresses: {
@@ -44,7 +44,7 @@ export class ProfRepository{
                         ville: adr.ville
                     } as Adresse;
                 }),
-            } as Prof;
+            } as Professionnel;
         });
       }
 }

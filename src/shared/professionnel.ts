@@ -1,6 +1,6 @@
 import { Adresse } from "./adresse";
 
-export interface Prof{
+export interface Professionnel{
     id: number;
     nom: string;
     prenom: string | null;
@@ -12,6 +12,6 @@ export interface Prof{
     adresses?: Adresse[];
 }
 
-export type ProfCreateDto = Omit<Prof, 'id'>;
+export type ProfessionnelCreateDto = Omit<Professionnel, 'id'>;
 
-export type ProfUpdateDto = Partial<ProfCreateDto>;
+export type ProfessionnelUpdateDto = Partial<ProfessionnelCreateDto>;

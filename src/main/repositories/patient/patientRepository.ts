@@ -21,7 +21,7 @@ export class PatientRepository {
         id: p.id_patient,
         nom: p.nom,
         prenom: p.prenom,
-        dateNaissance: p.date_naissance || null, // 'date_naissance' (DB) devient 'dateNaissance' (App)
+        dateNaissance: p.date_naissance || null,
         sexe: (p.sexe as SexeType) || null,
         tel: p.tel || null,
         email: p.email || null
@@ -41,39 +41,39 @@ export class PatientRepository {
       return null;
     }
 
-    const { id_patient, sexe: sexeFromDb, date_naissance, ...rest } = patientFromDb;
-    
     return {
-      id: id_patient,
-      dateNaissance: date_naissance,
-      ...rest,
-      sexe: (sexeFromDb as SexeType) || null
+      id: patientFromDb.id_patient,
+      nom: patientFromDb.nom,
+      prenom: patientFromDb.prenom,
+      dateNaissance: patientFromDb.date_naissance || null,
+      sexe: (patientFromDb.sexe as SexeType) || null,
+      tel: patientFromDb.tel || null,
+      email: patientFromDb.email || null
     } as Patient;
   }
 
   async addPatient(patientDto: PatientCreateDto): Promise<Patient> {
     
-    const dataForDb = {
+    const newPatient = await this.dbclient.patients.create({
+      data: {
         nom: patientDto.nom,
         prenom: patientDto.prenom,
         date_naissance: patientDto.dateNaissance || null,
-        sexe: (patientDto.sexe as patients_sexe) || null,
+        sexe: patientDto.sexe as patients_sexe || null,
         tel: patientDto.tel || null,
         email: patientDto.email || null
-    };
-
-    
-    const newPatient = await this.dbclient.patients.create({
-      data: dataForDb
+      }
     });
 
-    const { id_patient, sexe, date_naissance, ...rest } = newPatient;
-
+  
     return {
-        id: id_patient,
-        dateNaissance: date_naissance,
-        ...rest,
-        sexe: (sexe as SexeType) || null
+        id: newPatient.id_patient,
+        nom: newPatient.nom,
+        prenom: newPatient.prenom,
+        dateNaissance: newPatient.date_naissance || null,
+        sexe: (newPatient.sexe as SexeType) || null,
+        tel: newPatient.tel || null,
+        email: newPatient.email || null
     } as Patient;
    }
 
@@ -87,35 +87,28 @@ export class PatientRepository {
 
   async updatePatient(id: number, patientDto: PatientUpdateDto): Promise<Patient> {
      
-    const { sexe, dateNaissance, ...otherData } = patientDto;
-
-    const dataForDb: { [key: string]: any } = {
-        ...otherData, 
-    };
-
-    if (sexe !== undefined) {
-        dataForDb.sexe = (sexe as patients_sexe) || null;
-    }
-
-    if (dateNaissance !== undefined) {
-        dataForDb.date_naissance = dateNaissance || null;
-    }
-
-    const updatedPatientFromDb = await this.dbclient.patients.update({
+    const updatedPatient = await this.dbclient.patients.update({
       where: {
         id_patient: id 
       },
-      data: dataForDb
+      data: {
+        nom: patientDto.nom,
+        prenom: patientDto.prenom,
+        date_naissance: patientDto.dateNaissance || null,
+        sexe: (patientDto.sexe as SexeType) || null,
+        tel: patientDto.tel || null,
+        email: patientDto.email || null
+      }
     });
 
-    const { id_patient, sexe: sexeFromDb, date_naissance, ...rest } = updatedPatientFromDb;
-    
     return {
-      id: id_patient,
-      dateNaissance: date_naissance,
-      ...rest,
-      
-      sexe: (sexeFromDb as SexeType) || null 
+      id: updatedPatient.id_patient,
+      nom: updatedPatient.nom,
+      prenom: updatedPatient.prenom,
+      dateNaissance: updatedPatient.date_naissance || null,
+      sexe: (updatedPatient.sexe as SexeType) || null,
+      tel: updatedPatient.tel || null,
+      email: updatedPatient.email || null,
     } as Patient;
   }
 }

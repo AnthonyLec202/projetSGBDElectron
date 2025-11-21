@@ -3,7 +3,7 @@
     <h1>Nos Professionnels</h1>
     
     <button class="btn-primary" @click="goToAddPage">Ajouter un professionnel</button>
-    <button class="btn-secondary" @click="fetchProfessionnels">Rafraîchir</button>
+    
 
     <div class="list-container" v-if="professionnels.length > 0">
       <ProfessionnelCard
@@ -61,11 +61,4 @@ button {
   background-color: #0056b3;
 }
 
-.btn-secondary {
-  background-color: #e2e6ea;
-  color: #495057;
-}
-.btn-secondary:hover {
-  background-color: #dbe2e8;
-}
 </style>

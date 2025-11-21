@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-import { Professionnel } from "src/shared/professionnel";
+import { Professionnel, ProfessionnelCreateDto } from "src/shared/professionnel";
 
 
 const professionnels = ref<Professionnel[]>([]);
@@ -11,9 +11,15 @@ export function useProfessionnels() {
         professionnels.value = await window.electronService.professionnels.getProfessionnels();
     };
 
+    const addProfessionnel = async(professionnelDto: ProfessionnelCreateDto) => {
+        await window.electronService.professionnels.addProfessionnel(professionnelDto);
+        await fetchProfessionnels();
+    }
+
 
     return {
         professionnels,
-        fetchProfessionnels
+        fetchProfessionnels,
+        addProfessionnel
     }
 }

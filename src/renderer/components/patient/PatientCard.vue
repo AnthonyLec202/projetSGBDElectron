@@ -5,7 +5,7 @@
             <span class="prenom">{{ props.patient.prenom}}</span>
         </div>
         <button class="delete-button" @click="handleDelete">Supprimer</button>
-        <button class="updateButton" @click="handleUpdate">Modifier</button>
+        <button class="update-button" @click="handleUpdate">Modifier</button>
     </div>
 </template>
 
@@ -71,6 +71,16 @@ const handleUpdate = () => {
 
 .delete-button {
     background: #ef4444;
+    border: none;
+    color: white;
+    padding: .5rem 1rem;
+    border-radius: .375rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.update-button {
+    background: #3b82f6;
     border: none;
     color: white;
     padding: .5rem 1rem;

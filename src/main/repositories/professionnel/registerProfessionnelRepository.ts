@@ -1,3 +1,4 @@
+import { ProfessionnelCreateDto } from "src/shared/professionnel";
 import { ProfessionnelRepository } from "./professionnelRepository";
 import { ipcMain } from "electron";
 
@@ -9,5 +10,9 @@ export function registerProfessionnelRepository(){
     ipcMain.handle("profRepository:getProfessionnels", (e, a) => {
         return profRepository.getProfessionnels();
     });
+
+    ipcMain.handle("profRepository:addProfessionnel", (e, professionnelDto: ProfessionnelCreateDto) => {
+        return profRepository.addProfessionnel(professionnelDto)
+    })
 
 }

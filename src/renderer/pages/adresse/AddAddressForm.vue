@@ -1,16 +1,11 @@
 <template>
     <div class="container">
-        <h2>Ajouter un patient</h2> 
-        <input v-model="nom" type="text" name="nom" placeholder="Nom">
-        <input v-model="prenom" type="text" name="prenom" placeholder="Prenom">
-        <input v-model="dateNaissance" type="date" name="date_naissance">
-        <select v-model="sexe" name="sexe">
-            <option value="">Sélectionner le sexe (optionnel)</option>
-            <option value="M">M</option>
-            <option value="F">F</option>
-        </select>
-        <input v-model="tel" type="text" name="tel" placeholder="Téléphone (optionnel)">
-        <input v-model="email" type="text" name="email" placeholder="Email (optionnel)">
+        <h2>Ajouter une adresse</h2> 
+        <input v-model="rue" type="text" name="rue" placeholder="Rue">
+        <input v-model="numero" type="text" name="numero" placeholder="N°">
+        <input v-model="codePostal" type="text" name="Code postal" placeholder="Code postal">
+        <input v-model="ville" type="text" name="ville" placeholder="Ville">
+            
         <button type="submit" @click="handleAdd">Ajouter</button>
     </div>
 
@@ -18,34 +13,31 @@
 
 
 <script lang="ts" setup>
-import {SexeType } from 'src/shared/patient';
+
 import { ref } from 'vue';
-import { usePatients } from 'src/renderer/composables/patients';
+import { useAdresses } from 'src/renderer/composables/adresses';
 import { useRouter } from 'vue-router';
 
-const {addPatient} = usePatients();
+const {addAddress} = useAdresses();
 const router = useRouter();
 
-const nom = ref('');
-const prenom = ref('');
-const dateNaissance = ref<string>(''); 
-const sexe = ref('');
-const tel = ref('');
-const email = ref('');
+const rue = ref('');
+const numero = ref('');
+const codePostal = ref(''); 
+const ville = ref('');
+
 
 const handleAdd = async () => {
-    let patientDto = {
-        nom: nom.value,
-        prenom: prenom.value,
-        dateNaissance: dateNaissance.value ? new Date(dateNaissance.value) : null,
-        sexe: (sexe.value as SexeType) || null,
-        tel: tel.value || null,
-        email: email.value || null
+    let adresseDto = {
+        rue: rue.value,
+        numero: numero.value,
+        codePostal: codePostal.value,
+        ville: ville.value
     };
 
-    await addPatient(patientDto);
+    await addAddress(adresseDto);
 
-    router.push('/');
+    router.push('/adresses');
 }
 
 </script>

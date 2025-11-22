@@ -43,79 +43,50 @@ export class ProfessionnelRepository{
                         numero: adr.numero,
                         codePostal: adr.code_postal,
                         ville: adr.ville
-                    } as Adresse;
+                    };
                 }),
-            } as Professionnel;
+            };
         });
     }
 
-    async addProfessionnel(dto: ProfessionnelCreateDto): Promise<Professionnel> {
+    async addProfessionnel(professionneldto: ProfessionnelCreateDto): Promise<Professionnel> {
         
-        console.log("--- 🟢 [REPO] DÉBUT addProfessionnel ---");
-        console.log("1. DTO Reçu du Frontend:", JSON.stringify(dto, null, 2));
+        
 
-        // --- ÉTAPE 1 : Préparation de la Jointure ---
-        // On prépare un tableau qui contiendra toutes les opérations 
-        // à effectuer dans la table de jointure 'professionnels_adresses'.
-        const operationsJointure: any[] = [];
+        // 1. PRÉPARATION DE LA LIAISON
+        // On transforme la liste simple d'IDs [1, 5, 8] en objets Prisma pour la table de jointure.
+        // Pour chaque ID, on dit : "Crée une ligne dans la table de jointure en CONNECTANT l'adresse X"
+        
+        const operationsDeLiaison = professionneldto.idsAdresses.map(idAdresse => {
+            return {
+                // On cible la relation 'adresses' dans la table de jointure
+                adresses: {
+                    connect: { id_adresse: idAdresse }
+                }
+            };
+        });
 
-        // A. Cas : Créer de NOUVELLES adresses (Nested Create)
-        if (dto.adresseACreer && dto.adresseACreer.length > 0) {
-            dto.adresseACreer.forEach((addr, idx) => {
-                console.log(`   - Préparation création adresse #${idx+1}: ${addr.ville}`);
-                operationsJointure.push({
-                    // On cible la relation vers la table 'adresses'
-                    adresses: {
-                        create: { // Action : CRÉER une nouvelle adresse
-                            rue: addr.rue,
-                            numero: addr.numero || null,
-                            code_postal: addr.codePostal,
-                            ville: addr.ville
-                        }
-                    }
-                });
-            });
-        }
-
-        // B. Cas : Lier à des adresses EXISTANTES (Nested Connect)
-        if (dto.idAdressesExistantes && dto.idAdressesExistantes.length > 0) {
-            dto.idAdressesExistantes.forEach(id => {
-                console.log(`   - Préparation liaison adresse existante ID: ${id}`);
-                operationsJointure.push({
-                    // On cible la relation vers la table 'adresses'
-                    adresses: {
-                        connect: { // Action : CONNECTER une adresse existante
-                            id_adresse: id 
-                        }
-                    }
-                });
-            });
-        }
-
-        // --- ÉTAPE 2 : Construction de l'objet 'data' pour Prisma ---
-        // On commence avec les champs simples obligatoires
+        // 2. CONSTRUCTION DE L'OBJET DATA
         const dataForDb: any = {
-            nom_pro: dto.nom,
-            prenom_pro: dto.prenom || null,
-            specialite: dto.specialite,
-            email_pro: dto.email || null,
-            tel_pro: dto.tel || null,
+            nom_pro: professionneldto.nom,
+            prenom_pro: professionneldto.prenom || null,
+            specialite: professionneldto.specialite,
+            email_pro: professionneldto.email || null,
+            tel_pro: professionneldto.tel || null,
         };
 
-        // IMPORTANT : On n'ajoute la clé 'professionnels_adresses' QUE si nécessaire.
-        if (operationsJointure.length > 0) {
+        // On ajoute la relation SEULEMENT si on a sélectionné des adresses
+        if (operationsDeLiaison.length > 0) {
             dataForDb.professionnels_adresses = {
-                create: operationsJointure
+                create: operationsDeLiaison
             };
         }
 
-        console.log("2. Payload envoyé à Prisma (data):", JSON.stringify(dataForDb, null, 2));
-
         try {
-            // --- ÉTAPE 3 : Exécution de la Transaction ---
+            // 3. EXÉCUTION
             const newProFromDb = await this.dbclient.professionnels.create({
                 data: dataForDb,
-                // On demande à récupérer les adresses créées/liées pour le retour
+                // Important : On inclut la relation pour pouvoir renvoyer l'objet complet au frontend
                 include: {
                     professionnels_adresses: {
                         include: {
@@ -125,11 +96,10 @@ export class ProfessionnelRepository{
                 }
             });
 
-            console.log("--- ✅ [REPO] SUCCÈS PRISMA --- ID:", newProFromDb.id_professionnel);
-
-            // --- ÉTAPE 4 : Mappage de Sortie (Flattening) ---
-            // On transforme le résultat complexe de la DB en DTO propre
             
+
+            // 4. MAPPAGE DE SORTIE (Flattening)
+            // On transforme le résultat imbriqué de la DB en liste propre d'adresses
             const adressesMappees: Adresse[] = newProFromDb.professionnels_adresses.map(pa => {
                 const adr = pa.adresses;
                 return {
@@ -141,7 +111,7 @@ export class ProfessionnelRepository{
                 };
             });
 
-            // Retour de l'objet Professionnel complet
+            // Retour de l'objet final
             return {
                 id: newProFromDb.id_professionnel,
                 nom: newProFromDb.nom_pro,
@@ -153,10 +123,10 @@ export class ProfessionnelRepository{
             } as Professionnel;
 
         } catch (error) {
-            console.error("--- 🔴 [REPO] ERREUR PRISMA ---");
-            console.error(error);
-            // On propage l'erreur pour que le frontend soit notifié
+            console.error("--- 🔴 Erreur Prisma ---", error);
             throw error;
         }
     }
+
+    
 }

@@ -15,4 +15,5 @@ export function registerProfessionnelRepository(){
         return profRepository.addProfessionnel(professionnelDto)
     })
 
+
 }

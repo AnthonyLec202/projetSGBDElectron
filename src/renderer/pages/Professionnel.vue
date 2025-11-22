@@ -6,11 +6,7 @@
     
 
     <div class="list-container" v-if="professionnels.length > 0">
-      <ProfessionnelCard
-        v-for="pro in professionnels"
-        :key="pro.id"
-        :professionnel="pro" 
-      />
+      <ProfessionnelCard v-for="pro in professionnels" :key="pro.id" :professionnel="pro"/>
     </div>
     
   </div>

@@ -14,8 +14,7 @@ export interface Professionnel{
 type ProfessionnelBase = Omit<Professionnel, "id" | "adresses">;
 
 export interface ProfessionnelCreateDto extends ProfessionnelBase{
-    adresseACreer?: AdresseCreateDto[];
-    idAdressesExistantes?: number[];
+    idsAdresses: number[];
 }
 
 export interface ProfessionnelUpdateDto extends Partial<ProfessionnelCreateDto> {

@@ -50,7 +50,7 @@ const props = defineProps<Props>();
   margin: 4px 0;
 }
 .contact {
-  font-size: 0.9em;
+  font-size: 1.1em;
   color: #555;
 }
 .adresses-list {

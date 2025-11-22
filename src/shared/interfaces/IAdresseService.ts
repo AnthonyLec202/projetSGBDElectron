@@ -1,5 +1,9 @@
-import { Adresse } from "../adresse"
+import { Adresse, AdresseCreateDto, AdresseUpdateDto } from "../adresse"
 
 export default interface IAdresseService{
-    searchAdresses:(query: string) => Promise<Adresse[]>
+    getAddresses:() => Promise<Adresse[]>,
+    getAddressById:(id: number) => Promise<Adresse | null>,
+    addAddress:(adresseDto: AdresseCreateDto) => Promise<Adresse>,
+    deleteAddress:(id: number) => Promise<Adresse>,
+    updateAddress:(id: number, adresseDto: AdresseUpdateDto) => Promise<Adresse>
 }

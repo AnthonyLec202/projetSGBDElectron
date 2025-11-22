@@ -25,7 +25,7 @@ export class PatientRepository {
         sexe: (p.sexe as SexeType) || null,
         tel: p.tel || null,
         email: p.email || null
-      } as Patient;
+      };
     })
   };
 
@@ -49,7 +49,7 @@ export class PatientRepository {
       sexe: (patientFromDb.sexe as SexeType) || null,
       tel: patientFromDb.tel || null,
       email: patientFromDb.email || null
-    } as Patient;
+    };
   }
 
   async addPatient(patientDto: PatientCreateDto): Promise<Patient> {
@@ -74,7 +74,7 @@ export class PatientRepository {
         sexe: (newPatient.sexe as SexeType) || null,
         tel: newPatient.tel || null,
         email: newPatient.email || null
-    } as Patient;
+    };
    }
 
   async deletePatient(id: number): Promise<void>{
@@ -109,7 +109,7 @@ export class PatientRepository {
       sexe: (updatedPatient.sexe as SexeType) || null,
       tel: updatedPatient.tel || null,
       email: updatedPatient.email || null,
-    } as Patient;
+    };
   }
 }
 

@@ -7,6 +7,9 @@
       <RouterLink to="/professionnels" class="nav-button">
         Professionnels
       </RouterLink>
+      <RouterLink to="/adresses" class="nav-button">
+        Cabinets
+      </RouterLink>
 
     </div>
   </nav>

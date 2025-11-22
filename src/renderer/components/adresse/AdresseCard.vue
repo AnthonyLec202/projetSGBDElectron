@@ -1,21 +1,20 @@
 <template>
-    <div class="card">
-        <div class="card-info">
-            <span class="nom">{{ props.patient.nom }}</span>
-            <span class="prenom">{{ props.patient.prenom}}</span>
+    <div class="adress-card">
+        <div class="adress-info">
+            <span class="rue-numero">{{ props.adresse.rue }}, {{ props.adresse.numero }},</span>
+            <span class="code-postal">{{ props.adresse.codePostal}}</span>
+            <span class="ville">{{ props.adresse.ville}}</span>
         </div>
         <button class="delete-button" @click="onDeleteClick">Supprimer</button>
-        <button class="update-button" @click="onUpdateClick">Modifier</button>
+        <button class="update-button" @click="onUpdateClick">Modifier</button>  
     </div>
 </template>
 
-
 <script lang="ts" setup>
-import { Patient } from 'src/shared/patient';
-
+import { Adresse } from 'src/shared/adresse';
 
 interface Props {
-    patient: Patient
+    adresse: Adresse
 }
 
 const props = defineProps<Props>();
@@ -26,20 +25,20 @@ const emit = defineEmits<{
 }>();
 
 const onDeleteClick = () => {
-    emit("delete", props.patient.id);
+    emit("delete", props.adresse.id);
 }
 
 const onUpdateClick = () => {
-    emit("update", props.patient.id);
+    emit("update", props.adresse.id);
 }
 
- 
 </script>
 
 <style>
-.card {
+.adress-card {
     display: flex;
     padding: 2rem;
+    margin: 1rem;
     box-shadow: 10px 10px 30px rgba(0, 0, 0, .2);
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 1px solid #e2e8f0;
@@ -47,24 +46,18 @@ const onUpdateClick = () => {
     transition: ease-in-out .2s;
 }
 
-.card-info {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    color: #334155;
-    flex-grow: 1;
-}
-
-.card-info .nom {
+.adress-info {
+   display: flex;
+    flex-direction: row; /* Force l'affichage en ligne */
+    align-items: baseline; /* Aligne le texte sur la ligne de base */
+    width: 100%;
+    /* Sinon utilisez gap ci-dessous pour tout coller à gauche */
+    gap: 0.3rem; 
     font-size: 1.1rem;
-    font-weight: 600;
+    color: #334155;
 }
 
-.card-info .prenom {
-    font-weight: 400;
-}
-
-.card:hover {
+.adress-card:hover {
     transform: translateY(-5px);
 }
 
@@ -87,5 +80,6 @@ const onUpdateClick = () => {
     font-weight: 600;
     cursor: pointer;
 }
+
 
 </style>

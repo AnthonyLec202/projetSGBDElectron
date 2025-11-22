@@ -3,7 +3,7 @@
     
     <h2>Mettre à jour : {{ patientUpdate.nom }} {{ patientUpdate.prenom }}</h2>
     
-    <form> 
+    <form @submit.prevent="handleUpdate">
       <label for="nom">Nom :</label>
       <input v-model="nom" type="text" id="nom" required>
 
@@ -25,7 +25,7 @@
       <label for="email">Email :</label>
       <input v-model="email" type="text" id="email" placeholder="Email (optionnel)">
       
-      <button type="submit" @click="handleUpdate">Mettre à jour le patient</button>
+      <button type="submit">Mettre à jour le patient</button>
     </form>
   </div>
   

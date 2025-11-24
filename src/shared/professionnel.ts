@@ -1,4 +1,4 @@
-import { Adresse, AdresseCreateDto } from "./adresse";
+import { Adresse } from "./adresse";
 
 export interface Professionnel{
     id: number;

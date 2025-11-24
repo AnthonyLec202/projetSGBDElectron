@@ -1,14 +1,22 @@
 
-1# Copier coller le contenu du fichier script.sql dans un outil de gestion de base de données.
+# Prérequis
 
-2# Créer un fichier .env : 
+    Node.js (version 16 ou supérieure)
+    MySQL
+
+
+# Copier coller le contenu du fichier script.sql dans un outil de gestion de base de données et exécuter le script
+
+# Créer un fichier .env à la racine du projet : 
 
     DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/neuro_app"
 
-2# Installer les dépendances : 
+    Exemple : DATABASE_URL="mysql://root:root@localhost:3306/neuro_app"
+
+# Installer les dépendances : 
     
     npm install
 
-3# Démarrer l'application : 
+# Démarrer l'application : 
     
     npm run start

@@ -51,22 +51,14 @@ export class ProfessionnelRepository{
 
     async addProfessionnel(professionneldto: ProfessionnelCreateDto): Promise<Professionnel> {
         
-        
-
-        // 1. PRÉPARATION DE LA LIAISON
-        // On transforme la liste simple d'IDs [1, 5, 8] en objets Prisma pour la table de jointure.
-        // Pour chaque ID, on dit : "Crée une ligne dans la table de jointure en CONNECTANT l'adresse X"
-        
         const operationsDeLiaison = professionneldto.idsAdresses.map(idAdresse => {
             return {
-                // On cible la relation 'adresses' dans la table de jointure
                 adresses: {
                     connect: { id_adresse: idAdresse }
                 }
             };
         });
 
-        // 2. CONSTRUCTION DE L'OBJET DATA
         const dataForDb: any = {
             nom_pro: professionneldto.nom,
             prenom_pro: professionneldto.prenom || null,
@@ -75,73 +67,60 @@ export class ProfessionnelRepository{
             tel_pro: professionneldto.tel || null,
         };
 
-        // On ajoute la relation SEULEMENT si on a sélectionné des adresses
         if (operationsDeLiaison.length > 0) {
             dataForDb.professionnels_adresses = {
                 create: operationsDeLiaison
             };
         }
 
-        try {
-            // 3. EXÉCUTION
-            const newProFromDb = await this.dbclient.professionnels.create({
-                data: dataForDb,
-                // Important : On inclut la relation pour pouvoir renvoyer l'objet complet au frontend
-                include: {
-                    professionnels_adresses: {
-                        include: {
-                            adresses: true
+        
+        const newProFromDb = await this.dbclient.professionnels.create({
+            data: dataForDb,
+                
+            include: {
+                professionnels_adresses: {
+                    include: {
+                        adresses: true
                         }
                     }
                 }
             });
 
-            
-
-            // 4. MAPPAGE DE SORTIE (Flattening)
-            // On transforme le résultat imbriqué de la DB en liste propre d'adresses
-            const adressesMappees: Adresse[] = newProFromDb.professionnels_adresses.map(pa => {
-                const adr = pa.adresses;
-                return {
-                    id: adr.id_adresse,
-                    rue: adr.rue,
-                    numero: adr.numero,
-                    codePostal: adr.code_postal, // Traduction snake_case -> camelCase
-                    ville: adr.ville
-                };
-            });
-
-            // Retour de l'objet final
+        const adressesMappees: Adresse[] = newProFromDb.professionnels_adresses.map(pa => {
+            const adr = pa.adresses;
             return {
-                id: newProFromDb.id_professionnel,
-                nom: newProFromDb.nom_pro,
-                prenom: newProFromDb.prenom_pro,
-                specialite: newProFromDb.specialite,
-                email: newProFromDb.email_pro,
-                tel: newProFromDb.tel_pro,
-                adresses: adressesMappees
-            } as Professionnel;
+                id: adr.id_adresse,
+                rue: adr.rue,
+                numero: adr.numero,
+                codePostal: adr.code_postal, 
+                ville: adr.ville
+            };
+        });
 
-        } catch (error) {
-            console.error("--- 🔴 Erreur Prisma ---", error);
-            throw error;
-        }
+            
+        return {
+            id: newProFromDb.id_professionnel,
+            nom: newProFromDb.nom_pro,
+            prenom: newProFromDb.prenom_pro,
+            specialite: newProFromDb.specialite,
+            email: newProFromDb.email_pro,
+            tel: newProFromDb.tel_pro,
+            adresses: adressesMappees
+        };
     }
 
     async deleteProfessionnel(id: number): Promise<Professionnel> {
         
-        // 1. Suppression via Prisma
+        
         const deletedProFromDb = await this.dbclient.professionnels.delete({
             where: {
                 id_professionnel: id
             },
-            // On inclut les relations juste pour pouvoir renvoyer l'objet complet (optionnel mais propre)
             include: {
                 professionnels_adresses: { include: { adresses: true } }
             }
         });
-        // 2. Mappage de Sortie (Pour renvoyer l'objet supprimé proprement)
-        // (C'est la même logique que votre méthode get ou add)
+
         const adressesMappees = deletedProFromDb.professionnels_adresses.map(pa => ({
             id: pa.adresses.id_adresse,
             rue: pa.adresses.rue,
@@ -149,6 +128,7 @@ export class ProfessionnelRepository{
             codePostal: pa.adresses.code_postal,
             ville: pa.adresses.ville
         }));
+        
         return {
             id: deletedProFromDb.id_professionnel,
             nom: deletedProFromDb.nom_pro,

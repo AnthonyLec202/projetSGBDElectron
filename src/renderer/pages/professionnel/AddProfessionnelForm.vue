@@ -8,26 +8,23 @@
         <h3>Informations</h3>
         <div class="row">
           <div class="input-group">
-            <label>Nom *</label>
-            <input v-model="nom" placeholder="Ex: Dupont" required>
+            <input v-model="nom" placeholder="Nom (requis)" required>
           </div>
           <div class="input-group">
-            <label>Spécialité *</label>
-            <input v-model="specialite" placeholder="Ex: Neuropsychologue" required>
+            <input v-model="specialite" placeholder="Specialité (requis)" required>
           </div>
         </div>
         <div class="row">
-          <div class="input-group">
-            <label>Prénom</label>
-            <input v-model="prenom" placeholder="Ex: Jean">
+          <div class="input-group"> 
+            <input v-model="prenom" placeholder="Prénom">
           </div>
           <div class="input-group">
-            <label>Email</label>
-            <input v-model="email" type="email" placeholder="jean.dupont@email.com">
+            
+            <input v-model="email" type="email" placeholder="Email">
           </div>
           <div class="input-group">
-            <label>Téléphone</label>
-            <input v-model="tel" placeholder="06...">
+            
+            <input v-model="tel" placeholder="Téléphone">
           </div>
         </div>
       </div>
@@ -45,12 +42,7 @@
             </option>
           </select>
           
-          <button 
-            type="button" 
-            class="btn-add"
-            @click="addAddressToCart" 
-            :disabled="!selectedAddressId"
-          >
+          <button type="button" class="btn-add" @click="addAddressToCart" :disabled="!selectedAddressId">
             Ajouter
           </button>
         </div>
@@ -59,7 +51,6 @@
           <p>Adresses sélectionnées :</p>
           <ul>
             <li v-for="addr in addressesCart" :key="addr.id">
-              <span class="icon">📍</span>
               <span class="text">{{ addr.numero }} {{ addr.rue }}, {{ addr.codePostal }} {{ addr.ville }}</span>
               <button type="button" class="remove-btn" @click="removeFromCart(addr.id)">Retirer</button>
             </li>
@@ -82,54 +73,46 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
-// Imports des Composables
 import { useProfessionnels } from 'src/renderer/composables/professionnel';
 import { useAdresses } from 'src/renderer/composables/adresses';
-
-// Imports des Types
 import { ProfessionnelCreateDto } from 'src/shared/professionnel';
 import { Adresse } from 'src/shared/adresse';
 
 const router = useRouter();
 const { addProfessionnel } = useProfessionnels();
-// On renomme 'adresses' en 'allAdresses' pour la clarté
 const { adresses: allAdresses, getAddresses} = useAdresses();
 
-// --- État du Formulaire ---
+
 const nom = ref('');
 const prenom = ref('');
 const specialite = ref('');
 const email = ref('');
 const tel = ref('');
 
-// --- État de la Sélection d'Adresses ---
-const selectedAddressId = ref<number | null>(null); // L'ID temporaire du <select>
-const addressesCart = ref<Adresse[]>([]); // La liste des objets pour l'affichage
+const selectedAddressId = ref<number | null>(null);
+const addressesCart = ref<Adresse[]>([]);
 
-// Chargement des adresses au montage de la page
+
 onMounted(async () => {
     await getAddresses();
 });
 
-// --- LOGIQUE DU PANIER ---
 
 const addAddressToCart = () => {
     if (!selectedAddressId.value) return;
 
-    // 1. Vérification des doublons
+    
     const alreadyInCart = addressesCart.value.find(a => a.id === selectedAddressId.value);
     if (alreadyInCart) {
         alert("Cette adresse est déjà ajoutée.");
         return;
     }
 
-    // 2. Récupération de l'objet complet (pour l'affichage joli dans le panier)
     const fullAddress = allAdresses.value.find(a => a.id === selectedAddressId.value);
     
     if (fullAddress) {
         addressesCart.value.push(fullAddress);
-        selectedAddressId.value = null; // Reset du select
+        selectedAddressId.value = null;
     }
 };
 
@@ -137,10 +120,9 @@ const removeFromCart = (id: number) => {
     addressesCart.value = addressesCart.value.filter(a => a.id !== id);
 };
 
-// --- SOUMISSION ---
+
 
 const handleSubmit = async () => {
-    // Construction du DTO simple (juste la liste d'IDs)
     const dto: ProfessionnelCreateDto = {
         nom: nom.value,
         prenom: prenom.value || null,
@@ -148,17 +130,12 @@ const handleSubmit = async () => {
         email: email.value || null,
         tel: tel.value || null,
         
-        // TRADUCTION : On extrait les IDs de notre panier d'objets
         idsAdresses: addressesCart.value.map(a => a.id)
     };
 
-    try {
-        await addProfessionnel(dto);
-        router.push('/professionnels'); // Redirection vers la liste
-    } catch (e) {
-        console.error(e);
-        alert("Une erreur est survenue lors de la création.");
-    }
+    await addProfessionnel(dto);
+    router.push('/professionnels');
+
 };
 
 const goBack = () => {
@@ -181,7 +158,7 @@ h2 { text-align: center; color: #334155; margin-bottom: 2rem; }
 h3 { color: #475569; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.5rem; margin-bottom: 1rem; }
 
 .section { margin-bottom: 2rem; }
-.row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;}
 .input-group { flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
 
 label { font-size: 0.9rem; font-weight: 600; color: #64748b; }
@@ -191,7 +168,7 @@ input, select {
 }
 input:focus, select:focus { outline: none; border-color: #3b82f6; }
 
-/* Zone Adresses */
+
 .hint { font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem; }
 .add-box { display: flex; gap: 10px; }
 .address-select { flex-grow: 1; }
@@ -201,7 +178,7 @@ input:focus, select:focus { outline: none; border-color: #3b82f6; }
 }
 .btn-add:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-/* Panier */
+
 .cart { margin-top: 1rem; background: #f8fafc; padding: 1rem; border-radius: 6px; border: 1px dashed #cbd5e1; }
 .cart ul { list-style: none; padding: 0; margin: 0; }
 .cart li {
@@ -218,7 +195,7 @@ input:focus, select:focus { outline: none; border-color: #3b82f6; }
 .remove-btn:hover { background: #ef4444; color: white; }
 .empty-cart { color: #94a3b8; font-style: italic; margin-top: 0.5rem; }
 
-/* Actions Finales */
+
 .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
 .btn-cancel { background: white; border: 1px solid #cbd5e1; padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer; }
 .btn-submit { background: #3b82f6; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; }

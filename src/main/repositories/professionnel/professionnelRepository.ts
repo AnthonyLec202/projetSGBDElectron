@@ -128,5 +128,37 @@ export class ProfessionnelRepository{
         }
     }
 
+    async deleteProfessionnel(id: number): Promise<Professionnel> {
+        
+        // 1. Suppression via Prisma
+        const deletedProFromDb = await this.dbclient.professionnels.delete({
+            where: {
+                id_professionnel: id
+            },
+            // On inclut les relations juste pour pouvoir renvoyer l'objet complet (optionnel mais propre)
+            include: {
+                professionnels_adresses: { include: { adresses: true } }
+            }
+        });
+        // 2. Mappage de Sortie (Pour renvoyer l'objet supprimé proprement)
+        // (C'est la même logique que votre méthode get ou add)
+        const adressesMappees = deletedProFromDb.professionnels_adresses.map(pa => ({
+            id: pa.adresses.id_adresse,
+            rue: pa.adresses.rue,
+            numero: pa.adresses.numero,
+            codePostal: pa.adresses.code_postal,
+            ville: pa.adresses.ville
+        }));
+        return {
+            id: deletedProFromDb.id_professionnel,
+            nom: deletedProFromDb.nom_pro,
+            prenom: deletedProFromDb.prenom_pro,
+            specialite: deletedProFromDb.specialite,
+            email: deletedProFromDb.email_pro,
+            tel: deletedProFromDb.tel_pro,
+            adresses: adressesMappees
+        };
+    }
+
     
 }

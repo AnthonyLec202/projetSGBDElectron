@@ -1,7 +1,7 @@
 
 <template>
     <div class="list-container">
-        <h1>Adresses</h1>
+        <h1>Cabinets</h1>
         <AdresseCard v-for="adresse in adresses" :adresse="adresse"
         @delete="handleDelete"
         @update="handleUpdate"/>
@@ -39,6 +39,10 @@ const handleUpdate = async(id: number) => {
 </script>
 
 <style scoped>
+
+h1 {
+    color: white;
+}
 
 .list-container {
   display: flex;

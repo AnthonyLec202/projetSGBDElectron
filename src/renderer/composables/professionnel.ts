@@ -16,10 +16,16 @@ export function useProfessionnels() {
         await fetchProfessionnels();
     }
 
+    const deleteProfessionnel = async(id: number) => {
+        await window.electronService.professionnels.deleteProfessionnel(id);
+        fetchProfessionnels();
+    }
+
 
     return {
         professionnels,
         fetchProfessionnels,
-        addProfessionnel
+        addProfessionnel,
+        deleteProfessionnel
     }
 }

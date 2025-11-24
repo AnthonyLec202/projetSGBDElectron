@@ -5,6 +5,7 @@ import { ProfessionnelCreateDto } from "src/shared/professionnel"
 export function professionnelService(): IProfessionnelService{
     return{
         getProfessionnels: () => ipcRenderer.invoke("profRepository:getProfessionnels"),
-        addProfessionnel: (professionnelDto: ProfessionnelCreateDto) => ipcRenderer.invoke("profRepository:addProfessionnel", professionnelDto)
+        addProfessionnel: (professionnelDto: ProfessionnelCreateDto) => ipcRenderer.invoke("profRepository:addProfessionnel", professionnelDto),
+        deleteProfessionnel: (id: number) => ipcRenderer.invoke("profRepository:deleteProfessionnel", id)
     }
 }

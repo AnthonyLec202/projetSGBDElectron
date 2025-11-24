@@ -1,14 +1,16 @@
-<template>
-    <div class="container">
+<template> 
+    <form class="container" @submit.prevent="handleAdd">
+        
         <h2>Ajouter une adresse</h2> 
-        <input v-model="rue" type="text" name="rue" placeholder="Rue">
+        
+        <input v-model="rue" type="text" name="rue" placeholder="Rue" required>
         <input v-model="numero" type="text" name="numero" placeholder="N°">
-        <input v-model="codePostal" type="text" name="Code postal" placeholder="Code postal">
-        <input v-model="ville" type="text" name="ville" placeholder="Ville">
+        <input v-model="codePostal" type="text" name="Code postal" placeholder="Code postal" required>
+        <input v-model="ville" type="text" name="ville" placeholder="Ville" required>
             
-        <button type="submit" @click="handleAdd">Ajouter</button>
-    </div>
-
+        <button type="submit">Ajouter</button>
+        
+    </form>
 </template>
 
 

@@ -15,5 +15,10 @@ export function registerProfessionnelRepository(){
         return profRepository.addProfessionnel(professionnelDto)
     })
 
+    ipcMain.handle("profRepository:deleteProfessionnel", (e, id: number) => {
+        return profRepository.deleteProfessionnel(id);
+    })
+
+
 
 }

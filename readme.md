@@ -1,10 +1,14 @@
-## Useful commands
-### vs code extension
-version lens
-### packages
-npm install @prisma/client
-npm install @prisma/adapter-mariadb
-### scaffold
-npx prisma db pull --schema ./src/main/repositories/prisma/schema.prisma
-### generate client
-npx prisma generate --schema ./src/main/repositories/prisma/schema.prisma 
+
+1# Copier coller le contenu du fichier script.sql dans un outil de gestion de base de données.
+
+2# Modifier le fichier .env : 
+
+    DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/neuro_app"
+
+2# Installer les dépendances : 
+    
+    npm install
+
+3# Démarrer l'application : 
+    
+    npm run start

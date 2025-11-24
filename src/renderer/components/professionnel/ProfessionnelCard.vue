@@ -8,7 +8,6 @@
         <span>{{ props.professionnel.tel }}</span>
       </p>
     </div>
-
     <div class="adresses-list" v-if="props.professionnel.adresses && props.professionnel.adresses.length > 0">
       <h4>Adresses :</h4>
       <ul>
@@ -20,22 +19,29 @@
     <div v-else>
       <p><i>Aucune adresse enregistrée.</i></p>
     </div>
-
+    <button class="delete-button" @click="onDeleteClick">Supprimer</button>
   </div>
 </template>
 
 <script setup lang="ts">
 
-
 import { Professionnel } from 'src/shared/professionnel';
-
 
 interface Props {
   professionnel: Professionnel
 }
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+  (e:"delete", id: number): void
+}>();
+
+const onDeleteClick = () => {
+  emit("delete", props.professionnel.id);
+}
+
 </script>
+
 
 <style scoped>
 .pro-card {

@@ -1,6 +1,6 @@
 <template>
   <div class="list-container">
-    <h1>Mes Patients</h1>
+    <h1>Patients</h1>
     <PatientCard v-for="patient in patients" :patient="patient"
     @delete="handleDelete"
     @update="handleUpdate"/>
@@ -40,6 +40,10 @@ const handleUpdate = (id: number) => {
 </script>
 
 <style scoped>
+
+h1 {
+    color: white;
+}
 
 .list-container {
   display: flex;

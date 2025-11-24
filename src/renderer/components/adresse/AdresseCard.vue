@@ -48,10 +48,9 @@ const onUpdateClick = () => {
 
 .adress-info {
    display: flex;
-    flex-direction: row; /* Force l'affichage en ligne */
-    align-items: baseline; /* Aligne le texte sur la ligne de base */
+    flex-direction: row;
+    align-items: baseline; 
     width: 100%;
-    /* Sinon utilisez gap ci-dessous pour tout coller à gauche */
     gap: 0.3rem; 
     font-size: 1.1rem;
     color: #334155;

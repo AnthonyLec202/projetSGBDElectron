@@ -171,16 +171,16 @@ INSERT INTO patients (nom, prenom, date_naissance, sexe, tel, email) VALUES
 ('Garcia', 'Thomas', '2008-09-14', 'M', NULL, NULL);
 
 
-INSERT INTO seances (id_patient, type_seance, date_heure, notes) VALUES
-(1, 'Bilan initial', '2025-01-15 10:00:00', 'Première séance, évaluation générale'),
-(2, 'Rééducation cognitive', '2025-01-20 14:30:00', 'Travail sur la mémoire de travail'),
-(1, 'Rééducation', '2025-01-22 10:00:00', 'Travail sur l''attention'),
-(1, 'Suivi', '2025-01-29 10:00:00', 'Progrès notables'),
-(2, 'Suivi', '2025-01-27 14:30:00', 'Consolidation des acquis'),
-(3, 'Bilan initial', '2025-01-16 09:00:00', 'Enfant de 14 ans, difficultés scolaires'),
-(3, 'Rééducation', '2025-01-23 09:00:00', 'Exercices de mémoire'),
-(4, 'Bilan initial', '2025-01-17 11:00:00', 'Enfant de 9 ans'),
-(5, 'Bilan complet', '2025-01-18 15:00:00', 'Suspicion troubles attentionnels');
+INSERT INTO seances (id_patient, type_seance, duree_seance, date_heure, notes) VALUES
+(1, 'Bilan initial', 60, '2025-01-15 10:00:00', 'Première séance, évaluation générale'),
+(2, 'Rééducation cognitive', 90, '2025-01-20 14:30:00', 'Travail sur la mémoire de travail'),
+(1, 'Rééducation', 60, '2025-01-22 10:00:00', 'Travail sur l''attention'),
+(1, 'Suivi', 45, '2025-01-29 10:00:00', 'Progrès notables'),
+(2, 'Suivi', 45, '2025-01-27 14:30:00', 'Consolidation des acquis'),
+(3, 'Bilan initial', 90, '2025-01-16 09:00:00', 'Enfant de 14 ans, difficultés scolaires'),
+(3, 'Rééducation', 60, '2025-01-23 09:00:00', 'Exercices de mémoire'),
+(4, 'Bilan initial', 90,  '2025-01-17 11:00:00', 'Enfant de 9 ans'),
+(5, 'Bilan complet', 90, '2025-01-18 15:00:00', 'Suspicion troubles attentionnels');
 
 
 INSERT INTO rapports (id_patient, rapport_path) VALUES

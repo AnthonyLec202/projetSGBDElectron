@@ -1,7 +1,7 @@
 
 1# Copier coller le contenu du fichier script.sql dans un outil de gestion de base de données.
 
-2# Modifier le fichier .env : 
+2# Créer un fichier .env : 
 
     DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/neuro_app"
 
